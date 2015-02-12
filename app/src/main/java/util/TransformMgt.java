@@ -1,7 +1,8 @@
 package util;
 
-import Decoder.BASE64Decoder;
-import Decoder.BASE64Encoder;
+import org.apache.commons.codec.BinaryDecoder;
+import org.apache.commons.codec.BinaryEncoder;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.*;
 
@@ -10,15 +11,15 @@ import java.io.*;
  */
 public class TransformMgt
 {
-    static BASE64Decoder base64Decoder = new BASE64Decoder();
-    static BASE64Encoder base64Encoder = new BASE64Encoder();
+   static Base64 base64 = new Base64();
 
     /**
      * Read the object from Base64 string.
      */
     public static Object fromString(String s) throws IOException, ClassNotFoundException
     {
-        byte[] data = base64Decoder.decodeBuffer(s);
+        byte[] data = s.getBytes();
+        data = base64.decode(data);
         ObjectInputStream ois = new ObjectInputStream(
                 new ByteArrayInputStream(data));
         Object o = ois.readObject();
@@ -35,6 +36,6 @@ public class TransformMgt
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(o);
         oos.close();
-        return new String(base64Encoder.encode(baos.toByteArray()));
+        return new String(base64.encode(baos.toByteArray()));
     }
 }
